@@ -1,0 +1,28 @@
+FastAPI is a web framework which is used to make restful API's
+API is application programming interface.
+
+Restapi uses the HTTP request methods like (get, post put, patch, delete) to handle CRUD operations.
+
+To create a new environment we type python -m venv nameOfEnvironment.
+
+If we provide the link followed by openapi.json then that will give us a detailed json of all the api. 
+
+we can also use swagger UI to do this in a more efficient way. 
+If we provide the link followed by docs then we can reach swagger.
+
+Path parameters: Basically the concept of dynamic routing where we can take the extra parameters in curly braces.
+Path parameters routes should always be below the path routes. 
+
+Query parameters are a set of key value pairs that go after question marks within an api url
+skip_book: str = "book_3" so here the default value is book_3
+if we write skip_book: str then default value is none
+if we write skip_book: Optional[str]
+
+POST requests
+
+POST is generally used to send a request body to the server and send the response back.
+
+UUID - Universal universal Identifier- 128 bit label used for information in computer systems
+
+
+
