@@ -26,3 +26,4 @@ UUID - Universal universal Identifier- 128 bit label used for information in com
 
 We can use the Pydantic Fields to perform extra data validation in the Pydantic Models. 
 
+HTML form tags send form fields and that data is encoded in media type and fastapi will automatically decode the forms for us.

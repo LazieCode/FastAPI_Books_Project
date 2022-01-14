@@ -1,7 +1,14 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException, Request, status, Form, Header
 from pydantic import BaseModel, Field
 from uuid import UUID
 from typing import Optional
+from starlette.responses import JSONResponse
+
+
+class NegativeNumberException(Exception): # custom exceptions
+    def __init__(self, books_to_return):
+        self.books_to_return = books_to_return
+
 
 app = FastAPI()
 
@@ -12,7 +19,7 @@ class Book(BaseModel): # This is how we create a class using the base model and 
     description: Optional[str] = Field(title = "Description of Book", max_length=100, min_length=1)
     rating: int = Field(gt= -1, lt=101)
 
-    class Config: # Config is a predefined class anyother class name wont work and same is the case with schema_extra. 
+    class Config: # Config is a predefined class, another class name wont work and same is the case with schema_extra. 
         schema_extra = {
             "example": {
                 "id": "155947d9-a591-4ecf-b988-10753e8dd6ec",
@@ -23,10 +30,45 @@ class Book(BaseModel): # This is how we create a class using the base model and 
             }
         }
 
+class BookNoRating(BaseModel):
+    id: UUID
+    title: str = Field(min_length=1)
+    author: str = Field(max_length=50)
+    description: Optional[str] = Field(None, title = "description of the book", max_length=100)
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "id": "155947d9-a591-4ecf-b988-10753e8dd6ec",
+                "title": "CSE",
+                "author": "Shourya K Chirania",
+                "description": "Nice Book" 
+            }
+        }
+
 Books = []
+
+
+@app.exception_handler(NegativeNumberException)
+async def negative_no_exception(request: Request, exception: NegativeNumberException):
+    return JSONResponse(status_code=418, content={"message" : 'Books cannot be negative.'})
+
+
+@app.post("/books/login")
+async def login(username: str = Form(...), password: str = Form(...)): #if we dont mention the str to be of type form then fastapi will think that it is a query parameter.
+    return {"username": username, "password": password}
+
+@app.get("/header")
+async def read_header(random_header: Optional[str] = Header(None)):
+    return {"Randon-Header": random_header}
+
 
 @app.get('/')
 async def read_all_books(books_to_return: Optional[int] = None):
+
+    if(books_to_return and books_to_return< 0):
+        raise NegativeNumberException(books_to_return=books_to_return)
+
     if(len(Books) < 1):
         create_books_noapi()
     
@@ -47,10 +89,18 @@ async def read_book_uuid(book_id: UUID):
         if(book.id == book_id):
             return book
         
-    return "No book found"
+    raise itemNotFoundException
+
+@app.get("/book/rating/{book_id}", response_model=BookNoRating) # What the response model does is it returns a response based on the model class which we have passsed as the parameter and FastAPI automatically converts the current model into the response model.
+async def read_book_noRating(book_id: UUID):
+    for book in Books:
+        if(book.id == book_id):
+            return book
+        
+    raise itemNotFoundException
 
 
-@app.post("/")
+@app.post("/", status_code=status.HTTP_201_CREATED) # so status code 200 means that the process was succesful but status code 201 means that something was succesfully created.
 async def create_book(book: Book):
     Books.append(book)
     return Books
@@ -65,6 +115,8 @@ async def update_book(book_id: UUID, book: Book):
             Books[counter - 1] = book
             return Books[counter - 1]
 
+    raise itemNotFoundException
+
 @app.delete("/{book_id}")
 async def delete_book(book_id: UUID):
     counter = 0
@@ -74,6 +126,8 @@ async def delete_book(book_id: UUID):
         if(x.id == book_id):
             del Books[counter - 1]
             return Books
+
+    raise itemNotFoundException
             
 
 def create_books_noapi():
@@ -95,7 +149,10 @@ def create_books_noapi():
     Books.append(book_3)
 
 
+# Making exceptions 
 
+def itemNotFoundException():
+    return HTTPException(status_code=404, detail="Item not found", headers={"X-Header-Error": "Nothing seen at the UUID"})
 
 
 
