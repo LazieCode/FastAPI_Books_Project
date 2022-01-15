@@ -27,3 +27,44 @@ UUID - Universal universal Identifier- 128 bit label used for information in com
 We can use the Pydantic Fields to perform extra data validation in the Pydantic Models. 
 
 HTML form tags send form fields and that data is encoded in media type and fastapi will automatically decode the forms for us.
+
+Headers are a way by which we can send additonal information with each requeest. As the API receives the header we can do any kind of extra validation required 
+
+
+TODO --------------------------
+
+- Creating API's using request methods
+- Full sql database to save todos
+- Authentication using Bcrypt hashed password 
+- Authorization using JSON Web Tokens.
+
+sqlite 3 
+
+To view the tables we write .schema
+To insert something in the table we write insert into TodoList(title, description, priority, complete) 
+                                                                values('Feed the   dog', 'He is hungry', 4, False);
+
+To view the items we write select * from table_name
+
+To change the view mode there are 4 viewmodes
+- column
+- markdown
+- box
+- table
+
+we can change the mode by writing .mode box or .mode table and so on...
+
+To delete a row we write delete from TodoList where id = 4; id is the primary key which is not duplicated 
+                                                            we can use the primary key to delete items.
+
+To update an element this is the syntax:    
+        update table_name set column = value where primary_key = value;
+
+JWT - JSON web token is an Authorization token... 
+
+JSON Web token is a self-contained way to securely transmit data and information between two or more parties using a JSON object.
+
+Authentication is Basically when a user is logged in so we authenticate whether this is a valid user or not but authorization basically is when a user is logged in and he/she wants to send us a request so we authorize if the user is the same user that logged in and whether or not he has the access to the system.
+
+JWT format is 2 period seperated key for eg: aaaa.bbbbb.ccccc
+where a is the header, b is the payload and c is the signature.

@@ -69,7 +69,7 @@ async def read_all_books(books_to_return: Optional[int] = None):
     if(books_to_return and books_to_return< 0):
         raise NegativeNumberException(books_to_return=books_to_return)
 
-    if(len(Books) < 1):
+    if(len(Books)< 1):
         create_books_noapi()
     
     if(books_to_return and len(Books) >= books_to_return > 0):

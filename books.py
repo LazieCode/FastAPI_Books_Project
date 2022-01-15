@@ -9,7 +9,7 @@ Books = {
     'book_2': {'title': 'Title_two', 'author': 'Author_two'},
     'book_3': {'title': 'Title_three', 'author': 'Author_three'},
     'book_4': {'title': 'Title_four', 'author': 'Author_four'},
-    'book_5': {'title': 'Title_five', 'author': 'Author_five'},
+    'book_5': {'title': 'Title_five', 'author': 'Author_five'}
 }
 
 class DirectionName(str, Enum):  
@@ -67,8 +67,5 @@ async def read_book_title(title):
             return book
         
     return {'Message': 'Book not found'}
-
-
-
 
         
