@@ -68,3 +68,12 @@ Authentication is Basically when a user is logged in so we authenticate whether 
 
 JWT format is 2 period seperated key for eg: aaaa.bbbbb.ccccc
 where a is the header, b is the payload and c is the signature.
+
+We will use bcrypt for hashing our password
+
+postman is the industry standard for testing api's
+
+
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJsYXppZWJvbmUiLCJpZCI6MSwiZXhwIjoxNjQyMzczMjQ1fQ.R1ztKUnimrpe056A8hu2xGytMYtsODjJCmCW0f87KSA
+
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJwZGMiLCJpZCI6MiwiZXhwIjoxNjQyMzczMjY5fQ._cdBdo4_R6PBJgvKI-0zxkQaj7CdTRRz5r8smRVDKbo
