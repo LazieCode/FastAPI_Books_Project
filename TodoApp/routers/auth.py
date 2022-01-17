@@ -1,15 +1,14 @@
-from optparse import Option
-from pyexpat import model
-from venv import create
-from xml.dom import UserDataHandler
-from fastapi import FastAPI, status, Depends, HTTPException
+import sys
+sys.path.append('..') #this will help us to properly able to import everything that is present in the parent directory of auth
+
+from fastapi import APIRouter, status, Depends, HTTPException
 from pydantic import BaseModel
 from typing import Optional
 import models
 from passlib.context import CryptContext
 from database import engine, SessionLocal
 from sqlalchemy.orm import Session
-from datetime import date, datetime, timedelta
+from datetime import datetime, timedelta
 from jose import jwt, JWTError
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm # this library will be used to authenticate the user when they try to sign in. They will sign in via the OAuth2PasswordRequestForm
 #JWT is a bearer token.. Bearer is a type of token and authorization platform.
@@ -32,7 +31,11 @@ models.Base.metadata.create_all(bind = engine)
 
 oauth2_bearer = OAuth2PasswordBearer(tokenUrl = "token")
 
-app = FastAPI()
+router = APIRouter(
+    prefix="/auth",
+    tags=["auth"],
+    responses={404: {"description": "User unauthorized"}}
+)
 
 def get_db():
     db = SessionLocal()
@@ -83,12 +86,12 @@ async def get_current_user(token: str = Depends(oauth2_bearer)):
     except JWTError:
         raise get_user_exception()
 
-@app.get("/")
+@router.get("/users")
 async def read_all(db: Session = Depends(get_db)):
     return db.query(models.User).all()
 
 
-@app.post("/create/user", status_code= status.HTTP_201_CREATED)
+@router.post("/create/user", status_code = status.HTTP_201_CREATED)
 async def create_new_user(create_user: CreateUser, db: Session = Depends(get_db)):
     user_model = models.User()
 
@@ -108,7 +111,7 @@ async def create_new_user(create_user: CreateUser, db: Session = Depends(get_db)
     return user_model
 
 
-@app.post("/token")
+@router.post("/token")
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     user = authenticate_user(form_data.username, form_data.password, db)
 
